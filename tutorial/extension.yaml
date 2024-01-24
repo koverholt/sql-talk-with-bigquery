@@ -1,0 +1,25 @@
+openapi: 3.0.0
+info:
+  title: BigQuery API
+  description: Interact with the BigQuery API
+  version: 1.0.0
+servers:
+  - url: https://bigquery.googleapis.com
+paths:
+  /query:
+    post:
+      summary: Send a query
+      description: Send a query
+      operationId: send_query
+      parameters:
+        - name: query
+          description: SQL query to send to BigQuery
+          required: true
+          schema:
+            type: string
+        - name: maxResults
+          in: query
+          description: The maximum number of results to return
+          required: true
+          schema:
+            type: integer
