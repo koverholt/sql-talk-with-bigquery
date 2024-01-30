@@ -81,7 +81,11 @@ model = GenerativeModel(
     "gemini-pro", generation_config={"temperature": 0}, tools=[sql_query_tool]
 )
 
-st.set_page_config(page_title="SQL Talk with BigQuery", page_icon="vertex-ai.png")
+st.set_page_config(
+    page_title="SQL Talk with BigQuery",
+    page_icon="vertex-ai.png",
+    layout="wide",
+)
 
 col1, col2 = st.columns([8, 1])
 with col1:
@@ -95,7 +99,6 @@ with st.expander("Sample prompts:"):
     st.write("""
         - What kind of data is in this database?
         - How many distribution centers are there?
-        - What are the top 5 selling brands?
         - What are the top 5 product categories that we sell the most of?
         - How many customers made only one purchase and never returned?
     """)
