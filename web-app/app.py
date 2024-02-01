@@ -16,7 +16,7 @@ sql_query_func = FunctionDeclaration(
     "properties": {
         "query": {
             "type": "string",
-            "description": "SQL query that will help answer the user's question when run on a BigQuery dataset and table. Use the fully qualified dataset and table names."
+            "description": "SQL query that will help answer the user's question when run on a BigQuery dataset and table. In the SQL query, always use the fully qualified dataset and table names."
         }
     },
          "required": [
@@ -27,7 +27,7 @@ sql_query_func = FunctionDeclaration(
 
 list_datasets_func = FunctionDeclaration(
     name="list_datasets",
-    description="Get a list of datasets",
+    description="Get a list of datasets that will help answer the user's question",
     parameters={
     "type": "object",
     "properties": {
@@ -37,7 +37,7 @@ list_datasets_func = FunctionDeclaration(
 
 list_tables_func = FunctionDeclaration(
     name="list_tables",
-    description="List tables in a dataset",
+    description="List tables in a dataset that will help answer the user's question",
     parameters={
     "type": "object",
     "properties": {
@@ -54,7 +54,7 @@ list_tables_func = FunctionDeclaration(
 
 get_table_func = FunctionDeclaration(
     name="get_table",
-    description="Get information about a table, including the description, schema, and number of rows",
+    description="Get information about a table, including the description, schema, and number of rows that will help answer the user's question.",
     parameters={
     "type": "object",
     "properties": {
@@ -101,7 +101,8 @@ with st.expander("Sample prompts"):
         - What kind of data is in this database?
         - How many distribution centers are there?
         - What are the top 5 product categories that we sell the most of?
-        - What is the breakdown of where our customers are coming to our site from?
+        - What is the average price and number of items that customers order?
+        - Can you give me a summary with percentages of where users are coming to our website from?
     """)
 
 if "messages" not in st.session_state:
@@ -127,7 +128,12 @@ if prompt := st.chat_input("Ask me about information in the database..."):
         chat = model.start_chat()
         client = bigquery.Client()
 
-        prompt += " (Please give lots of detail and reasoning in your response)"
+        prompt += """
+            Please give a concise, high-level summary followed by detail in
+            plain language about where the information in your response is
+            coming from in the database. Only use information that you learn
+            from BigQuery, do not make up information.
+            """
 
         response = chat.send_message(prompt)
         response = response.candidates[0].content.parts[0]
@@ -164,7 +170,9 @@ if prompt := st.chat_input("Ask me about information in the database..."):
                     api_response = str(api_response)
 
                 if response.function_call.name == "sql_query":
-                    api_response = client.query(params["query"])
+                    job_config = bigquery.QueryJobConfig(maximum_bytes_billed=10000000)  # Data limit per query job
+                    query_job = client.query(params["query"], job_config=job_config)
+                    api_response = query_job.result()
                     api_response = str([row for row in api_response])
                     api_requests_and_responses.append([response.function_call.name, params, api_response])
 
