@@ -96,7 +96,7 @@ with col2:
 
 st.subheader("Powered by Function Calling in Gemini")
 
-with st.expander("Sample prompts:"):
+with st.expander("Sample prompts"):
     st.write("""
         - What kind of data is in this database?
         - How many distribution centers are there?
