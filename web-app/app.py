@@ -101,7 +101,7 @@ with st.expander("Sample prompts:"):
         - What kind of data is in this database?
         - How many distribution centers are there?
         - What are the top 5 product categories that we sell the most of?
-        - Out of all customers, how many made only one purchase and never returned?
+        - What is the breakdown of where our customers are coming to our site from?
     """)
 
 if "messages" not in st.session_state:
