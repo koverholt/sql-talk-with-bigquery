@@ -170,7 +170,7 @@ if prompt := st.chat_input("Ask me about information in the database..."):
                     api_response = str(api_response)
 
                 if response.function_call.name == "sql_query":
-                    job_config = bigquery.QueryJobConfig(maximum_bytes_billed=10000000)  # Data limit per query job
+                    job_config = bigquery.QueryJobConfig(maximum_bytes_billed=100000000)  # Data limit per query job
                     query_job = client.query(params["query"], job_config=job_config)
                     api_response = query_job.result()
                     api_response = str([row for row in api_response])
