@@ -111,7 +111,7 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
         try:
-            with st.expander("Function calls, parameters, and responses:"):
+            with st.expander("Function calls, parameters, and responses"):
                 st.markdown(message["backend_details"])
         except:
             pass
