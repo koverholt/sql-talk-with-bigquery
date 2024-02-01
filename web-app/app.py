@@ -102,7 +102,7 @@ with st.expander("Sample prompts"):
         - How many distribution centers are there?
         - What are the top 5 product categories that we sell the most of?
         - What is the average price and number of items that customers order?
-        - Can you give me a summary with percentages of where users are coming to our website from?
+        - Can you give me a breakdown with percentages of where users are coming from when registering on our site?
     """)
 
 if "messages" not in st.session_state:
