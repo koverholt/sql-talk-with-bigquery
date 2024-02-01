@@ -16,7 +16,7 @@ sql_query_func = FunctionDeclaration(
     "properties": {
         "query": {
             "type": "string",
-            "description": "SQL query that will help answer the user's question when run on a BigQuery dataset and table. In the SQL query, always use the fully qualified dataset and table names."
+            "description": "SQL query on a single line that will help give quantitative answers to the user's question when run on a BigQuery dataset and table. In the SQL query, always use the fully qualified dataset and table names."
         }
     },
          "required": [
@@ -100,9 +100,9 @@ with st.expander("Sample prompts"):
     st.write("""
         - What kind of data is in this database?
         - How many distribution centers are there?
-        - What are the top 5 product categories that we sell the most of?
+        - What's the average number of orders per day?
         - What is the average price and number of items that customers order?
-        - Can you give me a breakdown with percentages of where users are coming from when registering on our site?
+        - Which product categories have the highest profit margins?
     """)
 
 if "messages" not in st.session_state:
