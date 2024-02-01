@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 from google.cloud import bigquery
 from vertexai.preview.generative_models import (
@@ -93,14 +94,14 @@ with col1:
 with col2:
    st.image("vertex-ai.png")
 
-st.subheader("Powered by Vertex AI Extensions in Google Cloud")
+st.subheader("Powered by Function Calling in Gemini")
 
 with st.expander("Sample prompts:"):
     st.write("""
         - What kind of data is in this database?
         - How many distribution centers are there?
         - What are the top 5 product categories that we sell the most of?
-        - How many customers made only one purchase and never returned?
+        - Out of all customers, how many made only one purchase and never returned?
     """)
 
 if "messages" not in st.session_state:
@@ -109,6 +110,11 @@ if "messages" not in st.session_state:
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
+        try:
+            with st.expander("Function calls, parameters, and responses:"):
+                st.markdown(message["backend_details"])
+        except:
+            pass
 
 if prompt := st.chat_input("Ask me about information in the database..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
@@ -187,8 +193,18 @@ if prompt := st.chat_input("Ask me about information in the database..."):
             except AttributeError:
                 function_calling_in_process = False
 
+        time.sleep(3)
+
         full_response = (response.text)
         with message_placeholder.container():
-            st.markdown(backend_details)
             st.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+            with st.expander("Function calls, parameters, and responses:"):
+                st.markdown(backend_details)
+
+        st.session_state.messages.append(
+            {
+                "role": "assistant",
+                "content": full_response,
+                "backend_details": backend_details,
+                }
+        )
